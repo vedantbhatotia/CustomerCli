@@ -9,8 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "commander": "^12.1.0",
-    "inquirer": "^11.1.0",
+    "commander": "^2.11.0",
+    "dotenv": "^16.4.5",
+    "inquirer": "^4.0.0",
     "mongoose": "^8.7.0"
   }
 }

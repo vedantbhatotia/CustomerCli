@@ -1,28 +1,32 @@
 const mongoose = require('mongoose');
-const Customer = require('./models/customer');
-mongoose.Promise = global.Promise
-const db = mongoose.connect('mongodb://localhost:27017/customercli',{
-    useMongoClient: true
-});
-// function  to add customer
-const addCustomer = (customer) => {
-    Customer.create(customer).then(customer => {
-        console.info('New Customer Added');
-        db.close();
-    });
-}
-// function to find customer
-const FindCustomer = (name) => {
-    // lowercase and uppercase doesnot matter
+const Customer = require('./customer');
+const connectDB = require('./db');
+const addCustomer = async (customer) => {
+    try {
+        const newCustomer = await Customer.create(customer);
+        console.info('New Customer Added:', newCustomer);
+    } catch (error) {
+        console.error('Error adding customer:', error);
+    }
+};
+
+const findCustomer = async (name) => {
     const search = new RegExp(name, 'i');
-    Customer.find({$or: [{firstname: search}, {lastname: search}]})
-    .then(customer => {
-        console.info(customer);
-        console.info(`${customer.length} matches`);
-        db.close();
-    });
-}
+    try {
+        const customers = await Customer.find({
+            $or: [{ firstname: search }, { lastname: search }]
+        });
+        console.info(customers);
+        console.info(`${customers.length} matches found`);
+    } catch (error) {
+        console.error('Error finding customer:', error);
+    }
+};
+const init = async () => {
+    await connectDB();
+};
 module.exports = {
+    init,
     addCustomer,
-    FindCustomer
-}
+    findCustomer
+};
