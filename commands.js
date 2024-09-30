@@ -1,5 +1,6 @@
+#!/usr/bin/env node
 const program = require('commander');
-const { addCustomer, findCustomer, init } = require('./index'); 
+const { addCustomer, findCustomer, init,UpdateCustomer,RemoveCustomer} = require('./index'); 
 program
   .version('1.0.0')
   .description('Customer Management System');
@@ -26,10 +27,28 @@ program
     try {
         await init();
       const customers = await findCustomer(name);
-    //   console.info('Customer found:', );
     } catch (error) {
       console.error('Error finding customer:', error.message);
     }
   });
+program.command('update <_id> <firstname> <lastname> <phone> <email>').alias('u').description('Update a customer').action(async (_id, firstname, lastname, phone, email) => {
+    try {
+      await init();
+      await UpdateCustomer(_id, { firstname, lastname, phone, email });
+      console.info('Customer updated successfully!');
+    } catch (error) {
+      console.error('Error updating customer:', error.message);
+    }
+});
+
+program.command('remove <_id>').alias('r').description('Remove a customer').action(async (_id) => {
+    try {
+      await init();
+      await RemoveCustomer(_id);
+      console.info('Customer removed successfully!');
+    } catch (error) {
+      console.error('Error removing customer:', error.message);
+    }
+});
 
 program.parse(process.argv);

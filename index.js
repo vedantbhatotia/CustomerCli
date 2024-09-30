@@ -22,11 +22,44 @@ const findCustomer = async (name) => {
         console.error('Error finding customer:', error);
     }
 };
+const UpdateCustomer = async (_id, customer) => {
+    try {
+        const updatedCustomer = await Customer.findOneAndUpdate(
+            { _id: _id },
+            {
+                firstname: customer.firstname,
+                lastname: customer.lastname,
+                phone: customer.phone,
+                email: customer.email
+            },
+            { new: true }
+        );
+        console.info('Customer updated:', updatedCustomer);
+    } catch (error) {
+        console.error('Error updating customer:', error);
+    }
+};
+const RemoveCustomer = async (_id) => {
+    try {
+        const deletedCustomer = await Customer.findByIdAndDelete(_id);
+        if (deletedCustomer) {
+            console.info('Customer removed:', deletedCustomer);
+        } else {
+            console.info('Customer not found');
+        }
+    } catch (error) {
+        console.error('Error removing customer:', error);
+    }
+};
+
+
 const init = async () => {
     await connectDB();
 };
 module.exports = {
     init,
     addCustomer,
-    findCustomer
+    findCustomer,
+    UpdateCustomer,
+    RemoveCustomer
 };
